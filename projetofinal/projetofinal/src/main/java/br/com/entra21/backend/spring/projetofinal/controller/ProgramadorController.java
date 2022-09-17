@@ -1,5 +1,6 @@
 package br.com.entra21.backend.spring.projetofinal.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import br.com.entra21.backend.spring.projetofinal.model.ItemNivel3;
 import br.com.entra21.backend.spring.projetofinal.model.Programador;
 import br.com.entra21.backend.spring.projetofinal.repository.IProgramadorRepository;
 
@@ -26,6 +32,9 @@ import br.com.entra21.backend.spring.projetofinal.repository.IProgramadorReposit
 
 public class ProgramadorController {
 
+	
+	
+	private final String PATH = "localhost:8080/programadores";
 	@Autowired
 
 	private IProgramadorRepository programadorRepository;
@@ -34,7 +43,16 @@ public class ProgramadorController {
 	@ResponseStatus(HttpStatus.OK)
 
 	public List<Programador> listar() {
-		return programadorRepository.findAll();
+		
+	List<Programador> response = programadorRepository.findAll();
+	
+	response.forEach(programador ->{
+		setMaturidadeNivel3(programador);
+	});
+	
+	return response;
+	
+		
 	}
 
 	@GetMapping("/{id}")
@@ -86,5 +104,57 @@ public class ProgramadorController {
 			
 		
 	}
+	
+	private void setMaturidadeNivel3(Programador programador) {
+
+
+
+		ArrayList<String> headers = new ArrayList();
+
+		headers.add("Accept : application/json");
+
+		headers.add("Content-type : application/json");
+
+
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		mapper.setSerializationInclusion(Include.NON_NULL);
+
+		try {
+
+		programador.setLinks(null);
+
+		String nomeAtual = programador.getNome();
+
+		programador.setNome("Nome diferente");
+
+		String jsonUpdate = mapper.writeValueAsString(programador);
+
+		programador.setNome(nomeAtual);
+
+		programador.setId(null);
+
+		String jsonCreate = mapper.writeValueAsString(programador);
+
+		programador.setLinks(new ArrayList<>());
+
+		programador.getLinks().add(new ItemNivel3("GET", PATH, null, null));
+
+		programador.getLinks().add(new ItemNivel3("GET", PATH + "/" + programador.getId(), null, null));
+
+		programador.getLinks().add(new ItemNivel3("POST", PATH, headers, jsonCreate));
+
+		programador.getLinks().add(new ItemNivel3("PUT", PATH + "/" + programador.getId(), headers, jsonUpdate));
+
+		} catch (JsonProcessingException e) {
+
+		e.printStackTrace();
+
+		}
+
+
+
+		}
 
 }

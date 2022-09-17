@@ -19,9 +19,12 @@ public class ProjetofinalApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		String sql = "INSERT INTO programador (nome, qtd_linguagem) VALUES (?, ?)"; 
-
-		int result = jdbc.update(sql, "Rafael", 2);
+		//String sql = "INSERT INTO programador (nome, qtd_linguagem) VALUES (?, ?)";
+		String sql = "INSERT INTO personagem (habilidade, nome_heroi, nome_real, acessorio, idade) VALUES (?,?,?,?,?)";
+		
+		
+		int result=jdbc.update(sql,"Deus do Trovão", "Thor", "Thor Oddinson", 1 , 5000);
+		//int result = jdbc.update(sql, "Rafael", 2);
 		
 	}
 
