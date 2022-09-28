@@ -37,6 +37,14 @@ public class PersonagemController {
 	
 	private IPersonagemRepository personagemRepository;
 	
+	
+	@GetMapping("/qual_idade/{idade}")
+	public List<Personagem> qualIdade(@PathVariable("idade")Integer idade) {
+	
+	return personagemRepository.qualIdade(idade);
+			}
+	
+	
 	@GetMapping()
 	@ResponseStatus(HttpStatus.OK)
 	

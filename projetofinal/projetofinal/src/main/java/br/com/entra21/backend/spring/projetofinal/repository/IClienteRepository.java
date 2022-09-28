@@ -8,16 +8,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import br.com.entra21.backend.spring.projetofinal.model.Personagem;
-import br.com.entra21.backend.spring.projetofinal.model.Programador;
+import br.com.entra21.backend.spring.projetofinal.model.Cliente;
 
 @Repository
 @EnableJpaRepositories
-public interface IPersonagemRepository extends JpaRepository<Personagem,Integer>{
+public interface IClienteRepository extends JpaRepository<Cliente, Integer>{
+	
+	@Query("From Cliente WHERE depositoInicial >= :depositoParam")
+	
+	List<Cliente> qtdDeposito(@Param("depositoParam") String depositoInicial);
 
-	@Query("From Personagem WHERE idade >= :idadeParam")
-	
-	List<Personagem> qualIdade(@Param("idadeParam")Integer idade);
-	
-	
 }
